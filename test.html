@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Click Tracking Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>📊 Click Tracker Test</h2>
+    <button onclick="sendClick()">📤 Send Test Click</button>
+    <button onclick="getData()">📥 Get All Clicks</button>
+    <pre id="output">Click a button to start...</pre>
+
+    <script>
+        async function sendClick() {
+            document.getElementById('output').innerHTML = 'Sending...';
+            
+            const response = await fetch('http://127.0.0.1:5000/track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    delay: Math.random() * 2,
+                    result: "clicked",
+                    time: new Date().toLocaleTimeString()
+                })
+            });
+            
+            const data = await response.json();
+            document.getElementById('output').innerHTML = '✅ Sent:\n' + JSON.stringify(data, null, 2);
+        }
+
+        async function getData() {
+            document.getElementById('output').innerHTML = 'Loading...';
+            
+            const response = await fetch('http://127.0.0.1:5000/data');
+            const data = await response.json();
+            
+            document.getElementById('output').innerHTML = '📊 All Clicks:\n' + JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
